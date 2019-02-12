@@ -31,6 +31,6 @@ In the Email and Password fields, enter your information. Also, in Token, insert
 # How to Run
 ```
 git clone https://github.com/unk9vvn/Unk9S_BoT.git;cd Unk9_BoT && chmod 755 *
-python -m pip install --upgrade pip;pip install telegram python-telegram-bot requests wget
+pip install telegram python-telegram-bot requests wget;python -m pip install --upgrade pip
 python Unk9S_BoT.py
 ```
