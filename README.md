@@ -24,7 +24,7 @@ Note To use the robot, you must register on https://mega.nz/register and enter y
         shell=True)
     time.sleep(5)
     subprocess.Popen(
-        'mega-login unk9vvn@gmail.com 00980098"',
+        'mega-login Email Password',
         shell=True)
 
     updater = Updater('Token')
