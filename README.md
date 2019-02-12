@@ -19,22 +19,22 @@ This robot communicates directly with the mega.nz cloud network API and automati
 
 Note To use the robot, you must register on https://mega.nz/register and enter your username and password in the Unk9S_BoT.py script in the
 
-       subprocess.Popen(
-            'start cmd.exe /c "MEGAcmdServer"',
-            shell=True)
-        time.sleep(5)
-        subprocess.Popen(
-            'cmd.exe /c "mega-login Email Password"',
-            shell=True)
-            
-        updater = Updater('Token')
+    subprocess.Popen(
+        'start cmd.exe /c "MEGAcmdServer"',
+        shell=True)
+    time.sleep(5)
+    subprocess.Popen(
+        'mega-login unk9vvn@gmail.com 00980098"',
+        shell=True)
+
+    updater = Updater('Token')
         
 In the Email and Password fields, enter your information. Also, in Token, insert Token and start the script.
 
 
 # How to Run
 ```
-git clone https://github.com/unk9vvn/Unk9S_BoT.git;cd Unk9_BoT && chmod 755 *
+git clone https://github.com/unk9vvn/Unk9S_BoT.git & cd Unk9_BoT && chmod 755 *
 pip install telegram python-telegram-bot requests wget;python -m pip install --upgrade pip
 python Unk9S_BoT.py
 ```
