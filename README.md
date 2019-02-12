@@ -26,6 +26,8 @@ Note To use the robot, you must register on https://mega.nz/register and enter y
         subprocess.Popen(
             'cmd.exe /c "mega-login Email Password"',
             shell=True)
+            
+            updater = Updater('Token')
         
 In the Email and Password fields, enter your information. Also, in Token, insert Token and start the script.
 
