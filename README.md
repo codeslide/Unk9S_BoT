@@ -19,11 +19,13 @@ This robot communicates directly with the mega.nz cloud network API and automati
 
 Note To use the robot, you must register on https://mega.nz/register and enter your username and password in the Unk9S_BoT.py script in the
 
-        subprocess.call('start MEGAcmdServer', shell=True)
-        subprocess.call('mega-login ٍEmail Password', shell=True)
-    else:
-        subprocess.call('start MEGAcmdServer', shell=True)
-        subprocess.call('mega-login Email Password', shell=True)
+       subprocess.Popen(
+            'start cmd.exe /c "MEGAcmdServer"',
+            shell=True)
+        time.sleep(5)
+        subprocess.Popen(
+            'cmd.exe /c "mega-login Email Password"',
+            shell=True)
         
 In the Email and Password fields, enter your information. Also, in Token, insert Token and start the script.
 
