@@ -71,7 +71,7 @@ def downloading(bot, update):
             shell=True)
         time.sleep(5)
         subprocess.Popen(
-            'mega-login unk9vvn@gmail.com 00980098',
+            'mega-login Email Password',
             shell=True)
     else:
         subprocess.Popen(
@@ -79,7 +79,7 @@ def downloading(bot, update):
             shell=True)
         time.sleep(5)
         subprocess.Popen(
-            'mega-login unk9vvn@gmail.com 00980098',
+            'mega-login Email Password',
             shell=True)
 
     if message.document:
@@ -260,7 +260,7 @@ def error(bot, update, error):
 
 
 def main():
-    updater = Updater('520529550:AAFVaWVEYb6UIaxD2tLNudzl0e1cux5cznk')
+    updater = Updater('Token')
     dp = updater.dispatcher
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
