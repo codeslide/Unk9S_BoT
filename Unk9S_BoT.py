@@ -42,10 +42,10 @@ def downloader(bot, update):
 
 @run_async
 def downloading(bot, update):
+    bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     global filename
     message = update.message
     user = update.message.from_user
-    logger.info("User %s did not send a File.", user.first_name)
     rnd = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
     cwd = os.getcwd()
     dir_down = cwd + '\\tmp_down'
@@ -71,7 +71,7 @@ def downloading(bot, update):
             shell=True)
         time.sleep(5)
         subprocess.Popen(
-            'cmd.exe /c "mega-login Email Password"',
+            'mega-login unk9vvn@gmail.com 00980098',
             shell=True)
     else:
         subprocess.Popen(
@@ -79,11 +79,10 @@ def downloading(bot, update):
             shell=True)
         time.sleep(5)
         subprocess.Popen(
-            'cmd.exe /c "mega-login Email Password"',
+            'mega-login unk9vvn@gmail.com 00980098',
             shell=True)
 
     if message.document:
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         rnd_link = rnd
         document_id = message.document.file_id
         filename = message.document.file_name
@@ -91,8 +90,10 @@ def downloading(bot, update):
         rnd_nam_link = rnd_link + '.txt'
         dir_rnd_nam_link = dir_down + '\\' + rnd_nam_link
         newFile = bot.get_file(document_id)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         newFile.download(down_file)
         time.sleep(2)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         subprocess.call('mega-put -c "{0}"'.format(down_file),shell=True)
         subprocess.call('mega-export -a "%s" > %s' %(filename, dir_rnd_nam_link), shell=True)
         with open(dir_rnd_nam_link) as myfile:
@@ -105,7 +106,6 @@ def downloading(bot, update):
             'start cmd.exe /c "timeout 21600 & mega-rm -r \'%s\'"' %(filename),
             shell=True)
     elif message.photo:
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         rnd_photo = rnd
         rnd_link = rnd
         rnd_nam_photo = rnd_photo + '.jpg'
@@ -114,8 +114,10 @@ def downloading(bot, update):
         photo_id = message.photo[-1].file_id
         down_photo = dir_down + '\\' + rnd_nam_photo
         newFile = bot.get_file(photo_id)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         newFile.download(down_photo)
         time.sleep(2)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         subprocess.call('mega-put -c "{0}"'.format(down_photo), shell=True)
         subprocess.call('mega-export -a "%s" > %s' %(rnd_nam_photo, dir_rnd_nam_link), shell=True)
         with open(dir_rnd_nam_link) as myfile:
@@ -128,7 +130,6 @@ def downloading(bot, update):
             'start cmd.exe /c "timeout 21600 & mega-rm -r \'%s\'"' % (rnd_nam_photo),
             shell=True)
     elif message.video:
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         rnd_video = rnd
         rnd_link = rnd
         rnd_nam_video = rnd_video + '.mp4'
@@ -137,8 +138,10 @@ def downloading(bot, update):
         video_id = message.video.file_id
         down_video = dir_down + '\\' + rnd_nam_video
         newFile = bot.get_file(video_id)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         newFile.download(down_video)
         time.sleep(2)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         subprocess.call('mega-put -c "{0}"'.format(down_video), shell=True)
         subprocess.call('mega-export -a "%s" > %s' % (rnd_nam_video, dir_rnd_nam_link), shell=True)
         with open(dir_rnd_nam_link) as myfile:
@@ -160,8 +163,10 @@ def downloading(bot, update):
         audio_id = message.audio.file_id
         down_audio = dir_down + '\\' + rnd_nam_audio
         newFile = bot.get_file(audio_id)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         newFile.download(down_audio)
         time.sleep(2)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         subprocess.call('mega-put -c "{0}"'.format(down_audio), shell=True)
         subprocess.call('mega-export -a "%s" > %s' % (rnd_nam_audio, dir_rnd_nam_link), shell=True)
         with open(dir_rnd_nam_link) as myfile:
@@ -243,10 +248,11 @@ def admin(bot, update):
     bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     user = update.message.from_user
     logger.info("User %s admin the contact.", user.first_name)
-    update.message.reply_text('❇️ پیغام خود را برای ادمین بنویسید و صبور باشید تا ادمین ربات را چک و پاسخ شما را ارسال نماید.',
+    update.message.reply_text('❇️ پیغام خود را برای ادمین بنویسید و صبور باشید تا ادمین ربات را چک و پاسخ شما را ارسال نماید.'
+                              '\n@Unk9vvN        /restart',
                               reply_markup=ReplyKeyboardRemove())
 
-    return ConversationHandler.END
+    return RESTART
 
 
 def error(bot, update, error):
@@ -254,7 +260,7 @@ def error(bot, update, error):
 
 
 def main():
-    updater = Updater('Token')
+    updater = Updater('520529550:AAFVaWVEYb6UIaxD2tLNudzl0e1cux5cznk')
     dp = updater.dispatcher
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler('start', start)],
