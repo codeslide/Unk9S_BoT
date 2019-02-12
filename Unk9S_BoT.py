@@ -17,11 +17,13 @@ def start(bot, update):
     reply_keyboard = [['Downloader', 'Uploader'],
                       ['Admin']]
     update.message.reply_text(
-        text="""⤴️ گزینه Downloader به منظور دانلود هر نوع فایلی بر روی سرور تلگرام میباشد.
+        text="""⤴️ گزینه Downloader به منظور ساخت لینک از فایل Forward شده شما سرویس میدهد.
 
-⤵️ گزینه Uploader به منظور ساخت لینک از فایل های بر روی سرور تلگرام میباشد.
+⤵️ گزینه Uploader به منظور آپلود انواع فایل ها بر روی سرور تلگرام میباشد.
 
-🔄 برای استفاده دوباره از ربات گزینه /restart را کلیک کنید.""",
+🔄 برای استفاده دوباره از ربات گزینه restart را کلیک کنید.
+
+@Unk9vvN        /restart""",
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
     return DOWN_UP
@@ -55,16 +57,30 @@ def downloading(bot, update):
     if megadir == (True):
         wget.download(installer, cwd)
         subprocess.Popen(
-            ['powershell.exe', '$pathvargs = {%s /S /v/qn };Invoke-Command -ScriptBlock $pathvargs' % (name_ins)],
-            stdout=sys.stdout)
+            'cmd.exe /c "SET PATH=%PATH%;C:\Windows\System32\WindowsPowerShell\/v1.0"',
+            shell=True)
+        subprocess.Popen(
+            'powershell.exe -Command "$pathvargs = {%s /S /v/qn };Invoke-Command -ScriptBlock $pathvargs"' %(name_ins),
+            shell=True)
         time.sleep(10)
-        subprocess.Popen(['powershell.exe', '$env:PATH += ";$env:C:\Users\{0}\AppData\Local\MEGAcmd"'.format(user_win)],
-                         stdout=sys.stdout)
-        subprocess.call('start MEGAcmdServer', shell=True)
-        subprocess.call('mega-login ٍEmail Password', shell=True)
+        subprocess.Popen(
+            'cmd.exe /c "SET PATH=%PATH%;C:\Users\{0}\AppData\Local\MEGAcmd"'.format(user_win),
+            shell=True)
+        subprocess.Popen(
+            'start cmd.exe /c "MEGAcmdServer"',
+            shell=True)
+        time.sleep(5)
+        subprocess.Popen(
+            'cmd.exe /c "mega-login Email Password"',
+            shell=True)
     else:
-        subprocess.call('start MEGAcmdServer', shell=True)
-        subprocess.call('mega-login Email Password', shell=True)
+        subprocess.Popen(
+            'start cmd.exe /c "MEGAcmdServer"',
+            shell=True)
+        time.sleep(5)
+        subprocess.Popen(
+            'cmd.exe /c "mega-login Email Password"',
+            shell=True)
 
     if message.document:
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -211,11 +227,13 @@ def restart(bot, update):
     reply_keyboard = [['Downloader', 'Uploader'],
                       ['Admin']]
     update.message.reply_text(
-        text="""⤴️ گزینه Downloader به منظور دانلود هر نوع فایلی بر روی سرور تلگرام میباشد.
+        text="""⤴️ گزینه Downloader به منظور ساخت لینک از فایل Forward شده شما سرویس میدهد.
 
-⤵️ گزینه Uploader به منظور ساخت لینک از فایل های بر روی سرور تلگرام میباشد.
+⤵️ گزینه Uploader به منظور آپلود انواع فایل ها بر روی سرور تلگرام میباشد.
 
-🔄 برای استفاده دوباره از ربات گزینه /restart را کلیک کنید.""",
+🔄 برای استفاده دوباره از ربات گزینه restart را کلیک کنید.
+
+@Unk9vvN        /restart""",
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
     return DOWN_UP
