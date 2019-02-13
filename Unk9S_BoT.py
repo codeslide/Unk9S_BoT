@@ -71,7 +71,7 @@ def downloading(bot, update):
             'start cmd.exe /c "MEGAcmdServer"',
             shell=True)
         subprocess.Popen(
-            'mega-login Email admin',
+            'mega-login Email Password',
             shell=True)
     else:
         subprocess.Popen(
