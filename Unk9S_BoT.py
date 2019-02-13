@@ -2,7 +2,7 @@
 # coding=utf-8
 # https://t.me/unk9vvn
 # AVI
-import telegram, logging, wget, requests, os, glob, time, random, subprocess, getpass, sys, string, thread
+import telegram, logging, wget, requests, os, glob, time, random, subprocess, getpass, string
 from telegram import *
 from telegram.ext import *
 
@@ -23,7 +23,7 @@ def start(bot, update):
 
 🔄 برای استفاده دوباره از ربات گزینه restart را کلیک کنید.
 
-@Unk9vvN        /restart""",
+/restart""",
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
     return DOWN_UP
@@ -33,7 +33,7 @@ def downloader(bot, update):
     bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     user = update.message.from_user
     logger.info("File of %s: %s", user.first_name, update.message.text)
-    update.message.reply_text('🌀فایل مورد نظر خود را Forward نمایید.'
+    update.message.reply_text('🌀 فایل مورد نظر خود را Forward نمایید.'
                               '\n/restart',
                               reply_markup=ReplyKeyboardRemove())
 
@@ -42,10 +42,11 @@ def downloader(bot, update):
 
 @run_async
 def downloading(bot, update):
-    bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     global filename
+    bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     message = update.message
     user = update.message.from_user
+    logger.info("User %s did send a File.", user.first_name)
     rnd = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
     cwd = os.getcwd()
     dir_down = cwd + '\\tmp_down'
@@ -69,21 +70,17 @@ def downloading(bot, update):
         subprocess.Popen(
             'start cmd.exe /c "MEGAcmdServer"',
             shell=True)
-        time.sleep(5)
         subprocess.Popen(
-            'mega-login Email Password',
+            'mega-login Email admin',
             shell=True)
     else:
         subprocess.Popen(
             'start cmd.exe /c "MEGAcmdServer"',
             shell=True)
-        time.sleep(5)
-        subprocess.Popen(
-            'mega-login Email Password',
-            shell=True)
 
     if message.document:
         rnd_link = rnd
+        query = update.callback_query
         document_id = message.document.file_id
         filename = message.document.file_name
         down_file = dir_down + '\\' + filename
@@ -93,18 +90,27 @@ def downloading(bot, update):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         newFile.download(down_file)
         time.sleep(2)
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-        subprocess.call('mega-put -c "{0}"'.format(down_file),shell=True)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_DOCUMENT)
+        subprocess.call('mega-put -c "{0}"'.format(down_file), shell=True)
         subprocess.call('mega-export -a "%s" > %s' %(filename, dir_rnd_nam_link), shell=True)
+        lines = open(dir_rnd_nam_link, "r+").readlines()
+        lines = [x.strip() for x in lines]
+        link = "".join(lines)
+        link = link.replace("Exported /{0}: ".format(filename), "")
+        executor = link
+        commandline = open(dir_rnd_nam_link, 'w')
+        commandline.write(executor)
+        commandline.close()
         with open(dir_rnd_nam_link) as myfile:
             link_open = myfile.read()
-        bot.send_message(chat_id=update.message.chat_id, text='%s\n\n🌀 طول عمر لینک 6 ساعت میباشد.\n@Unk9vvN        /restart' %(link_open),
+        bot.send_message(chat_id=update.message.chat_id, text='%s\n🌀 طول عمر لینک 6 ساعت میباشد.\n\n/restart' %(link_open),
                          reply_markup=ReplyKeyboardRemove())
         os.remove(down_file)
         os.remove(dir_rnd_nam_link)
         subprocess.Popen(
             'start cmd.exe /c "timeout 21600 & mega-rm -r \'%s\'"' %(filename),
             shell=True)
+
     elif message.photo:
         rnd_photo = rnd
         rnd_link = rnd
@@ -115,20 +121,31 @@ def downloading(bot, update):
         down_photo = dir_down + '\\' + rnd_nam_photo
         newFile = bot.get_file(photo_id)
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+        update.message.reply_text('↖️ فایل مورد نظر در حال دانلود از روی تلگرام بات میبباشد, لطفا صبور باشید...')
         newFile.download(down_photo)
         time.sleep(2)
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+        update.message.reply_text('↙️ فایل مورد نظر در حال آپلود بر روی سرور mega میبباشد, لطفا صبور باشید...')
         subprocess.call('mega-put -c "{0}"'.format(down_photo), shell=True)
         subprocess.call('mega-export -a "%s" > %s' %(rnd_nam_photo, dir_rnd_nam_link), shell=True)
+        lines = open(dir_rnd_nam_link, "r+").readlines()
+        lines = [x.strip() for x in lines]
+        link = "".join(lines)
+        link = link.replace("Exported /{0}: ".format(filename), "")
+        executor = link
+        commandline = open(dir_rnd_nam_link, 'w')
+        commandline.write(executor)
+        commandline.close()
         with open(dir_rnd_nam_link) as myfile:
             link_open = myfile.read()
-        bot.send_message(chat_id=update.message.chat_id, text='%s\n\n🌀 طول عمر لینک 6 ساعت میباشد.\n@Unk9vvN        /restart' %(link_open),
+        bot.send_message(chat_id=update.message.chat_id, text='%s\n🌀 طول عمر لینک 6 ساعت میباشد.\n\n/restart' %(link_open),
                          reply_markup=ReplyKeyboardRemove())
         os.remove(down_photo)
         os.remove(dir_rnd_nam_link)
         subprocess.Popen(
             'start cmd.exe /c "timeout 21600 & mega-rm -r \'%s\'"' % (rnd_nam_photo),
             shell=True)
+
     elif message.video:
         rnd_video = rnd
         rnd_link = rnd
@@ -141,18 +158,27 @@ def downloading(bot, update):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         newFile.download(down_video)
         time.sleep(2)
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_VIDEO)
         subprocess.call('mega-put -c "{0}"'.format(down_video), shell=True)
         subprocess.call('mega-export -a "%s" > %s' % (rnd_nam_video, dir_rnd_nam_link), shell=True)
+        lines = open(dir_rnd_nam_link, "r+").readlines()
+        lines = [x.strip() for x in lines]
+        link = "".join(lines)
+        link = link.replace("Exported /{0}: ".format(filename), "")
+        executor = link
+        commandline = open(dir_rnd_nam_link, 'w')
+        commandline.write(executor)
+        commandline.close()
         with open(dir_rnd_nam_link) as myfile:
             link_open = myfile.read()
-        bot.send_message(chat_id=update.message.chat_id, text='%s\n\n🌀 طول عمر لینک 6 ساعت میباشد.\n@Unk9vvN        /restart' %(link_open),
+        bot.send_message(chat_id=update.message.chat_id, text='%s\n🌀 طول عمر لینک 6 ساعت میباشد.\n\n/restart' %(link_open),
                          reply_markup=ReplyKeyboardRemove())
         os.remove(down_video)
         os.remove(dir_rnd_nam_link)
         subprocess.Popen(
             'start cmd.exe /c "timeout 21600 & mega-rm -r \'%s\'"' % (rnd_nam_video),
             shell=True)
+
     elif message.audio:
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         rnd_audio = rnd
@@ -164,14 +190,24 @@ def downloading(bot, update):
         down_audio = dir_down + '\\' + rnd_nam_audio
         newFile = bot.get_file(audio_id)
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+        update.message.reply_text('↖️ فایل مورد نظر در حال دانلود از روی تلگرام بات میبباشد, لطفا صبور باشید...')
         newFile.download(down_audio)
         time.sleep(2)
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_AUDIO)
+        update.message.reply_text('↙️ فایل مورد نظر در حال آپلود بر روی سرور mega میبباشد, لطفا صبور باشید...')
         subprocess.call('mega-put -c "{0}"'.format(down_audio), shell=True)
         subprocess.call('mega-export -a "%s" > %s' % (rnd_nam_audio, dir_rnd_nam_link), shell=True)
+        lines = open(dir_rnd_nam_link, "r+").readlines()
+        lines = [x.strip() for x in lines]
+        link = "".join(lines)
+        link = link.replace("Exported /{0}: ".format(filename), "")
+        executor = link
+        commandline = open(dir_rnd_nam_link, 'w')
+        commandline.write(executor)
+        commandline.close()
         with open(dir_rnd_nam_link) as myfile:
             link_open = myfile.read()
-        bot.send_message(chat_id=update.message.chat_id, text='%s\n\n🌀 طول عمر لینک 6 ساعت میباشد.\n@Unk9vvN        /restart' %(link_open),
+        bot.send_message(chat_id=update.message.chat_id, text='%s\n🌀 طول عمر لینک 6 ساعت میباشد.\n\n/restart' %(link_open),
                          reply_markup=ReplyKeyboardRemove())
         os.remove(down_audio)
         os.remove(dir_rnd_nam_link)
@@ -191,17 +227,18 @@ def uploader(bot, update):
     bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     user = update.message.from_user
     logger.info("Link of %s: %s", user.first_name, update.message.text)
-    update.message.reply_text('🌀لینک مورد نظر خود را ارسال نمایید.'
+    update.message.reply_text('🌀 لینک مورد نظر خود را ارسال نمایید.'
                               '\n/restart',
                               reply_markup=ReplyKeyboardRemove())
 
     return UPLOADING
 
 
+@run_async
 def uploading(bot, update):
     global final_name
     user = update.message.from_user
-    logger.info("User %s did not send a Link.", user.first_name)
+    logger.info("User %s did send a Link.", user.first_name)
     try:
         response = requests.get(update.message.text)
         if response.status_code == 200:
@@ -209,15 +246,18 @@ def uploading(bot, update):
             cwd = os.getcwd()
             dir_up = cwd + '\\tmp_up'
             dir_files = dir_up + '\\*'
-            bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_DOCUMENT)
+            bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+            update.message.reply_text('↙️ فایل مورد نظر در حال دانلود از آدرس فرستاده شده میبباشد, لطفا صبور باشید...')
             wget.download(link, dir_up)
             file_lists = glob.glob(dir_files)
             file_last = max(file_lists, key=os.path.getctime)
             cout_dir = file_last.count('\\')
             final_name = file_last.split('\\')[cout_dir].split(' ')[0]
             file_dir = dir_up + '\\' + final_name
+            bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_DOCUMENT)
+            update.message.reply_text('↖️ فایل مورد نظر در حال آپلود بر روی تلگرام بات میبباشد, لطفا صبور باشید...')
             bot.send_document(chat_id=update.message.chat_id, document=open(file_dir, 'rb'),
-                              caption='@Unk9vvN        /restart')
+                              caption='/restart')
             os.remove(file_dir)
     except requests.exceptions.MissingSchema:
         update.message.reply_text('‼️ لینک شما معتبر نمیباشد, لطفا اصلاح نمایید.')
@@ -238,7 +278,7 @@ def restart(bot, update):
 
 🔄 برای استفاده دوباره از ربات گزینه restart را کلیک کنید.
 
-@Unk9vvN        /restart""",
+/restart""",
         reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
 
     return DOWN_UP
@@ -249,7 +289,7 @@ def admin(bot, update):
     user = update.message.from_user
     logger.info("User %s admin the contact.", user.first_name)
     update.message.reply_text('❇️ پیغام خود را برای ادمین بنویسید و صبور باشید تا ادمین ربات را چک و پاسخ شما را ارسال نماید.'
-                              '\n@Unk9vvN        /restart',
+                              '\n/restart',
                               reply_markup=ReplyKeyboardRemove())
 
     return RESTART
